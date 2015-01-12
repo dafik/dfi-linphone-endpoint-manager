@@ -1,6 +1,6 @@
 {
   "name": "local-endpointmanager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "manager for linphone wrappers",
   "main": "index.js",
   "scripts": {
