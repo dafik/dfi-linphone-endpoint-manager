@@ -1,5 +1,5 @@
 {
-  "name": "endpointmanager",
+  "name": "local-endpointmanager",
   "version": "1.0.0",
   "description": "manager for linphone wrappers",
   "main": "index.js",
