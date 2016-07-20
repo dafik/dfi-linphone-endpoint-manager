@@ -1,5 +1,5 @@
 {
-  "name": "local-endpointmanager",
+  "name": "local-dfi-linphone-endpoint-manager",
   "version": "1.0.3",
   "description": "manager for linphone wrappers",
   "main": "endpointManager.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dev:z.wieczorek/linphone-endpoint-manager.git"
+    "url": "git@gitlab.dev:z.wieczorek/dfi-linphone-endpoint-manager.git"
   },
   "author": "",
   "license": "ISC",
