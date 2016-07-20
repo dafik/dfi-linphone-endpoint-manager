@@ -1,11 +1,11 @@
-var Linphone = require('local-linphone');
-var EventEmitter = require('events').EventEmitter;
-var actions = require('local-dfi-asterisk-ami').Actions;
+const EventEmitter = require('events').EventEmitter,
+    Linphone = require('local-dfi-linphone'),
+    actions = require('local-dfi-asterisk-ami').Actions;
 /**
  *
  * @param {AsteriskServer} server
  * @constructor
- * @property {SimpleMap} endpoints
+ * @property {Map} endpoints
  */
 function EndpointManager(server) {
     var _supportedTechnologies = ['sip', 'pjsip'];
