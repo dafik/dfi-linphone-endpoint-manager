@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.dev:z.wieczorek/dfi-linphone-endpoint-manager.git"
+    "url": "git@gitlab.dev:dfi/dfi-linphone-endpoint-manager.git"
   },
   "author": "",
   "license": "ISC",
