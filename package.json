@@ -13,9 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "log4js": ">=0.6.21",
-    "local-linphone": ">=1.0.2",
-    "local-simple-map": ">=1.1.2",
-    "local-nami-extended": ">=1.0.2"
+    "local-dfi-asterisk-ami": "*",
+    "local-dfi-linphone": "*",
+    "log4js": ">=0.6.21"
   }
 }

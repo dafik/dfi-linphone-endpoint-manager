@@ -1,8 +1,6 @@
 var Linphone = require('local-linphone');
 var EventEmitter = require('events').EventEmitter;
-var actions = require('local-nami-extended').Actions;
-var SimpleMap = require('local-simple-map');
-
+var actions = require('local-dfi-asterisk-ami').Actions;
 /**
  *
  * @param {AsteriskServer} server
@@ -11,7 +9,7 @@ var SimpleMap = require('local-simple-map');
  */
 function EndpointManager(server) {
     var _supportedTechnologies = ['sip', 'pjsip'];
-    var _endpoints = new SimpleMap();
+    var _endpoints = new Map();
     var _server = server;
 
     var _currentPort = (function () {
@@ -53,7 +51,7 @@ function EndpointManager(server) {
         },
         length: {
             get: function () {
-                return _endpoints.getLength();
+                return _endpoints.size;
             }
         },
         server: {
@@ -92,13 +90,13 @@ function EndpointManager(server) {
         }
         endpoint.on(Linphone.Events.CLOSE, function () {
             if (_endpoints.has(endpoint.configuration.sip)) {
-                _endpoints.remove(endpoint.configuration.sip);
-                if (_endpoints.getLength() == 0) {
+                _endpoints.delete(endpoint.configuration.sip);
+                if (_endpoints.size == 0) {
                     this.emit(this.events.endpointsCleared);
                 }
             }
         }.bind(this));
-        _endpoints.add(endpoint.configuration.sip, endpoint);
+        _endpoints.set(endpoint.configuration.sip, endpoint);
     };
     this.setupEndpoints = function (howMany, transport, technology, context) {
         howMany = howMany || 2;
@@ -149,8 +147,8 @@ function EndpointManager(server) {
             finish();
         }
 
-        if (_endpoints.getLength() > 0) {
-            waitForExit = _endpoints.getLength();
+        if (_endpoints.size > 0) {
+            waitForExit = _endpoints.size;
             _endpoints.forEach(onEachEndpoint)
         } else {
             waitForExit = 1;
