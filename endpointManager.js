@@ -1,6 +1,8 @@
 const EventEmitter = require('events').EventEmitter,
-    Linphone = require('local-dfi-linphone'),
-    actions = require('local-dfi-asterisk-ami').Actions;
+    util = require('util');
+//Linphone = require('local-dfi-linphone'),
+const Linphone = require('../dfi-linphone/src/linphone');
+const actions = require('local-dfi-asterisk-ami').Actions;
 /**
  *
  * @param {AsteriskServer} server
@@ -101,9 +103,11 @@ function EndpointManager(server) {
     this.setupEndpoints = function (howMany, transport, technology, context) {
         howMany = howMany || 2;
         transport = transport || 'udp';
-        technology = this.chooseTechnology(technology, onTechnologyChoose, this);
+        this.chooseTechnology(technology, onTechnologyChoose, this);
+        var selectetTechnology;
 
         function onTechnologyChoose(technology) {
+            selectetTechnology = technology;
             if (technology == 'pjsip') {
                 createPjsipEndpoints.call(this, _server, transport, howMany, context, onCreated, this);
             } else if (technology == 'sip') {
@@ -121,7 +125,7 @@ function EndpointManager(server) {
             }
             this.endpoints = endpoints;
             //noinspection JSPotentiallyInvalidUsageOfThis
-            this.emit(this.events.endpointsSet);
+            this.emit(this.events.endpointsSet, selectetTechnology);
         }
     };
     this.clear = function (callback, thisp) {
@@ -160,7 +164,7 @@ function EndpointManager(server) {
     this.chooseTechnology = function (technology, callback, thisp) {
 
         var available = [];
-        Object.keys(this.server.channelManager.technologyCount).forEach(function (name) {
+        Object.keys(this.server.getManager('channel').get('technologyCount')).forEach(function (name) {
             available.push(name.toLowerCase());
         });
         var tmp = []
@@ -178,6 +182,16 @@ function EndpointManager(server) {
             callback.call(thisp, available[0]);
         }
     }
+
+
+    this.getEndpoints = function () {
+        var out = {};
+        this.endpoints.forEach(function (entry, key) {
+            out[key] = entry;
+        });
+        return out;
+    }
+
 }
 util.inherits(EndpointManager, EventEmitter);
 
@@ -220,7 +234,7 @@ function createPjsipEndpoints(server, transport, howMany, context, callBack, thi
             callBack.call(thisp, err);
             return
         }
-        action = new actions.PjsipShowEndpointsAction();
+        action = new actions.PJSIPShowEndpoints();
         server.sendAction(action, onPjsipShowEndpoints.bind(this))
     }
 
@@ -327,7 +341,7 @@ function createSipEndpoints(server, transport, howMany, context, callBack, thisp
     var waitForEndpoint = 0;
     var waitForCreate = 0;
 
-    server.dbDelTree('registrar', onDbDelTree.bind(this));
+    server.actions.db.dbDelTree('registrar', onDbDelTree.bind(this));
 
 
     function onDbDelTree(err) {
@@ -340,11 +354,9 @@ function createSipEndpoints(server, transport, howMany, context, callBack, thisp
         //foundEndpoints.forEach(function (endpoint) {
 
         /**
-         * @type {PjsipShowEndpointAction}
+         * @type {Command}
          */
-        action = new actions.CommandAction();
-        action.setCommand('sip show users');
-
+        action = new actions.Command('sip show users');
         server.sendAction(action, onSipShowUsers.bind(this));
 
         //})
@@ -352,36 +364,37 @@ function createSipEndpoints(server, transport, howMany, context, callBack, thisp
 
     function onSipShowUsers(err, response) {
         var endpoint = 1;
-        endpoints = server.peerManager.peers.get('SIP');
+        endpoints = server.getManager('peer').peers._byTech['SIP'];
 
         var re = /(\d+)\s+([a-z]+)\s+([a-z-_]+)\s+(Yes|No)\s+(Yes|No)/;
         var match = 'd';
-        var foundEndpointsTmp = [];
+        var foundEndpointsTmp = new Map();
         response.getResults().forEach(onEachLine);
         function onEachLine(line) {
             match = line.split(/\s+/);
-            if (context && context == match[2]) {
-                if (endpoints.has(match[0])) {
-                    endpoint = endpoints.get(match[0]);
+            var id = match[0];
+
+            if (!context || context == match[2]) {
+                if (endpoints.hasOwnProperty(id)) {
+                    endpoint = endpoints[id];
                     //noinspection JSPrimitiveTypeWrapperUsage
                     endpoint.password = match[1];
                     //noinspection JSPrimitiveTypeWrapperUsage
                     endpoint.context = match[2];
 
-                    foundEndpointsTmp[endpoint.objectname] = endpoint;
+                    foundEndpointsTmp.set(id, endpoint);
                 }
             }
         }
 
-        if (howMany > foundEndpointsTmp) {
+        if (howMany > foundEndpointsTmp.size) {
             throw new Error('requested phone was: "' + howMany + '" but match configuration found is: "' + foundEndpointsTmp.length + '"');
         }
+        waitForEndpoint = foundEndpointsTmp.size;
+        for (var key  of foundEndpointsTmp.keys()) {
 
-        waitForEndpoint = Object.keys(foundEndpointsTmp).length;
-        for (var i = 0; i < waitForEndpoint; i++) {
-            endpoint = foundEndpointsTmp[Object.keys(foundEndpointsTmp)[i]];
-            action = new actions.CommandAction();
-            action.setCommand('sip show peer ' + endpoint.objectname);
+            endpoint = foundEndpointsTmp.get(key);
+            action = new actions.Command('sip show peer ' + key);
 
             server.sendAction(action, onSipShowPeer.bind(this));
 
@@ -400,8 +413,8 @@ function createSipEndpoints(server, transport, howMany, context, callBack, thisp
                 if (-1 !== line.indexOf('Allowed.Trsp')) {
                     var transports = line.replace('Allowed.Trsp :', '').trim().split(',');
                     if (-1 !== transports.indexOf(transport.toUpperCase())) {
-                        endpoint = foundEndpointsTmp[name];
-                        foundEndpoints[endpoint.objectname] = endpoint;
+                        endpoint = foundEndpointsTmp.get(name);
+                        foundEndpoints[endpoint.get('objectname')] = endpoint;
                     }
                 }
             });
@@ -422,14 +435,15 @@ function createSipEndpoints(server, transport, howMany, context, callBack, thisp
         for (var i = 0; i < howMany; i++) {
             waitForCreate++;
             pjSipConf = foundEndpoints[pjSips[i]];
-            linphone = new Linphone({
+            var options = {
                 port: this.currentPort,
                 rtpPort: this.currentRtpPort,
-                sip: pjSipConf.objectname,
+                sip: pjSipConf.get('objectname'),
                 password: pjSipConf.password,
-                host: server.configuration.server.host,
+                host: server.get('options').server.host,
                 technology: 'SIP'
-            });
+            }
+            linphone = new Linphone(options);
             linphone.once(Linphone.Events.REGISTERED, onCreateClient.bind(this));
             linphone.on(Linphone.Events.ERROR, onCreateError.bind(this));
             endpoints[pjSips[i]] = linphone;
