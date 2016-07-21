@@ -1,8 +1,7 @@
 const EventEmitter = require('events').EventEmitter,
-    util = require('util');
-//Linphone = require('local-dfi-linphone'),
-const Linphone = require('../dfi-linphone/src/linphone');
-const actions = require('local-dfi-asterisk-ami').Actions;
+    util = require('util'),
+    Linphone = require('local-dfi-linphone'),
+    actions = require('local-dfi-asterisk-ami').Actions;
 /**
  *
  * @param {AsteriskServer} server
