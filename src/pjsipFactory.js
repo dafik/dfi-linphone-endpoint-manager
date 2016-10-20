@@ -1,12 +1,14 @@
 "use strict";
 const Linphone = require("local-dfi-linphone/src/linphone");
-const actionNames_1 = require("local-dfi-asterisk/src/internal/asterisk/actionNames");
+const AST_ACTION = {
+    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint"
+};
 function createPjsipEndpoints(manager, server, transport, howMany, astContext, callBackFn, callbackContext) {
     let endpoints = {};
     let foundEndpoints = {};
     let waitForEndpoint = 0;
     let waitForCreate = 0;
-    server.sendEventGeneratingAction({ Action: actionNames_1.AST_ACTION.PJSIP_SHOW_ENDPOINTS }, (err, response) => {
+    server.sendEventGeneratingAction({ Action: AST_ACTION.PJSIP_SHOW_ENDPOINTS }, (err, response) => {
         if (err) {
             callBackFn.call(callbackContext, err);
             return;
@@ -19,7 +21,7 @@ function createPjsipEndpoints(manager, server, transport, howMany, astContext, c
         for (let name in foundEndpoints) {
             if (foundEndpoints.hasOwnProperty(name)) {
                 waitForEndpoint++;
-                let act = { Action: actionNames_1.AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name };
+                let act = { Action: AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name };
                 server.sendEventGeneratingAction(act, (err1, response1) => {
                     if (err1) {
                         callBackFn.call(callbackContext, err1);

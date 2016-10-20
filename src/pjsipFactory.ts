@@ -1,8 +1,10 @@
 import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 import EndpointManager = require("./endpointManager");
 import Linphone = require("local-dfi-linphone/src/linphone");
-import {AST_ACTION} from "local-dfi-asterisk/src/internal/asterisk/actionNames";
-import {IAstActionPJSIPShowEndpoints} from "local-dfi-asterisk/src/internal/asterisk/actions";
+
+const AST_ACTION = {
+    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint"
+};
 
 export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskServer, transport: string, howMany: number, astContext, callBackFn, callbackContext) {
 
@@ -26,7 +28,7 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
         for (let name in foundEndpoints) {
             if (foundEndpoints.hasOwnProperty(name)) {
                 waitForEndpoint++;
-                let act: IAstActionPJSIPShowEndpoints = {Action: AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name};
+                let act = {Action: AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name};
                 server.sendEventGeneratingAction(act, (err1, response1) => {
                     if (err1) {
                         callBackFn.call(callbackContext, err1);

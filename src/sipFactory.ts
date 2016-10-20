@@ -1,10 +1,12 @@
 import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 import Linphone = require("local-dfi-linphone/src/linphone");
-import {AST_ACTION} from "local-dfi-asterisk/src/internal/asterisk/actionNames";
 import EndpointManager = require("./endpointManager");
 import DebugLogger = require("local-dfi-debug-logger");
 
-let logger = new DebugLogger('sip:factory');
+let logger = new DebugLogger("sip:factory");
+const AST_ACTION = {
+    COMMAND: "Command"
+};
 
 export function createSipEndpoints(manager: EndpointManager, server: AsteriskServer, transport: string, howMany: number, asteriskContext, callBackFn, callbackContext) {
 
@@ -18,12 +20,12 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
     let foundEndpoints = {};
     let waitForEndpoint = 0;
 
-    logger.debug('sending ast: sip show users');
+    logger.debug("sending ast: sip show users");
 
     server.sendAction({Action: AST_ACTION.COMMAND, Command: "sip show users"}, onSipShowUsers.bind(this));
 
     function onSipShowUsers(err, response) {
-        logger.debug('ast: sip show users response');
+        logger.debug("ast: sip show users response");
         if (err) {
             throw err;
         }

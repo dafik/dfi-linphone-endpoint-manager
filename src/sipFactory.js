@@ -1,16 +1,18 @@
 "use strict";
 const Linphone = require("local-dfi-linphone/src/linphone");
-const actionNames_1 = require("local-dfi-asterisk/src/internal/asterisk/actionNames");
 const DebugLogger = require("local-dfi-debug-logger");
-let logger = new DebugLogger('sip:factory');
+let logger = new DebugLogger("sip:factory");
+const AST_ACTION = {
+    COMMAND: "Command"
+};
 function createSipEndpoints(manager, server, transport, howMany, asteriskContext, callBackFn, callbackContext) {
     let endpointsToReturn;
     let foundEndpoints = {};
     let waitForEndpoint = 0;
-    logger.debug('sending ast: sip show users');
-    server.sendAction({ Action: actionNames_1.AST_ACTION.COMMAND, Command: "sip show users" }, onSipShowUsers.bind(this));
+    logger.debug("sending ast: sip show users");
+    server.sendAction({ Action: AST_ACTION.COMMAND, Command: "sip show users" }, onSipShowUsers.bind(this));
     function onSipShowUsers(err, response) {
-        logger.debug('ast: sip show users response');
+        logger.debug("ast: sip show users response");
         if (err) {
             throw err;
         }
@@ -38,7 +40,7 @@ function createSipEndpoints(manager, server, transport, howMany, asteriskContext
         for (let i = 0; i < waitForEndpoint; i++) {
             endpoint = foundEndpointsTmp[Object.keys(foundEndpointsTmp)[i]];
             logger.debug("sending ast: sip show peer " + endpoint.objectName);
-            server.sendAction({ Action: actionNames_1.AST_ACTION.COMMAND, Command: "sip show peer " + endpoint.objectName }, onSipShowPeer.bind(this));
+            server.sendAction({ Action: AST_ACTION.COMMAND, Command: "sip show peer " + endpoint.objectName }, onSipShowPeer.bind(this));
         }
         function onSipShowPeer(err1, resp) {
             logger.debug("response ast: sip show peer " + endpoint.objectName);
