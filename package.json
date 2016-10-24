@@ -1,6 +1,6 @@
 {
   "name": "local-dfi-linphone-endpoint-manager",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "manager for linphone wrappers",
   "main": "endpointManager.js",
   "scripts": {
