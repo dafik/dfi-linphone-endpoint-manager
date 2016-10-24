@@ -6,6 +6,10 @@ const AST_ACTION = {
     COMMAND: "Command"
 };
 function createSipEndpoints(manager, server, transport, howMany, asteriskContext, callBackFn, callbackContext) {
+    if (!server.managers.peer.enabled) {
+        callBackFn.call(callbackContext, new Error("peer manager not enabled"));
+        return;
+    }
     let endpointsToReturn;
     let foundEndpoints = {};
     let waitForEndpoint = 0;

@@ -16,6 +16,11 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
         context: string;
     }
 
+    if (!server.managers.peer.enabled) {
+        callBackFn.call(callbackContext, new Error("peer manager not enabled"));
+        return;
+    }
+
     let endpointsToReturn: Map<string, IPeer>;
     let foundEndpoints = {};
     let waitForEndpoint = 0;
