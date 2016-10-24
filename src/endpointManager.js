@@ -76,11 +76,13 @@ class EndpointManager extends events_1.EventEmitter {
                 return;
             }
             this.setEndpoints(endpoints);
-            this.emit(EndpointManager.events.ENDPOINTS_SET);
+            this.emit(EndpointManager.events.ENDPOINTS_SET, technologyChoosen);
         }
         howMany = howMany || 2;
         transport = transport || "udp";
-        technology = this._chooseTechnology(technology, (tech) => {
+        let technologyChoosen;
+        this._chooseTechnology(technology, (tech) => {
+            technologyChoosen = tech;
             if (tech === "pjsip") {
                 pjsipFactory_1.createPjsipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
             }
