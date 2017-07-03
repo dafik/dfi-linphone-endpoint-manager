@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const EndpointManager = require("./src/endpointManager");
 let _instance;
 function getInstance(server) {

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
 const index_1 = require("../index");

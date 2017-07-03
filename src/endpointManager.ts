@@ -1,16 +1,16 @@
+import {EventEmitter} from "events";
 import {createPjsipEndpoints} from "./pjsipFactory";
 import {createSipEndpoints} from "./sipFactory";
-import {EventEmitter} from "events";
 import Linphone = require("local-dfi-linphone/src/linphone");
 import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 
-let _currentPort = (() => {
+const _currentPort = (() => {
     let nextId = 5061;
     return () => {
         return nextId++;
     };
 })();
-let _currentRtpPort = (() => {
+const _currentRtpPort = (() => {
     let nextId = 7078;
     return () => {
         return ++nextId;
@@ -50,12 +50,12 @@ class EndpointManager extends EventEmitter {
 
     public setEndpoints(endpoints: Linphone|Linphone[]|{[key: string]: Linphone}) {
         if (Array.isArray(endpoints)) {
-            endpoints.forEach(endpoint => {
+            endpoints.forEach((endpoint) => {
 
                 this.addEndpoint(endpoint);
             });
         } else if (!(endpoints instanceof Linphone)) {
-            for (let endpointName in endpoints) {
+            for (const endpointName in endpoints) {
                 if (endpoints.hasOwnProperty(endpointName)) {
                     this.addEndpoint(endpoints[endpointName]);
                 }
@@ -67,7 +67,7 @@ class EndpointManager extends EventEmitter {
 
     public addEndpoint(endpoint: Linphone) {
         if (!(endpoint instanceof Linphone)) {
-            throw new TypeError("endpoint must be Linphone prototype but found: " + typeof endpoint === "Object" ? ((<any> endpoint).constructor.name) : " ");
+            throw new TypeError("endpoint must be Linphone prototype but found: " + typeof endpoint === "Object" ? ((endpoint as any).constructor.name) : " ");
         }
         endpoint.on(Linphone.events.CLOSE, () => {
             if (this._endpoints.has(endpoint.configuration.sip)) {
@@ -89,16 +89,16 @@ class EndpointManager extends EventEmitter {
                 return;
             }
             this.setEndpoints(endpoints);
-            this.emit(EndpointManager.events.ENDPOINTS_SET, technologyChoosen);
+            this.emit(EndpointManager.events.ENDPOINTS_SET, technologyChosen);
         }
 
         howMany = howMany || 2;
         transport = transport || "udp";
 
-        let technologyChoosen;
+        let technologyChosen;
 
         this._chooseTechnology(technology, (tech) => {
-            technologyChoosen = tech;
+            technologyChosen = tech;
             if (tech === "pjsip") {
                 createPjsipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
             } else if (tech === "sip") {
@@ -148,7 +148,7 @@ class EndpointManager extends EventEmitter {
         Object.keys(this._server.managers.channel.technologyCount).forEach((name) => {
             available.push(name.toLowerCase());
         });
-        let tmp = [];
+        const tmp = [];
         available.forEach((name) => {
             if (-1 !== EndpointManager._supportedTechnologies.indexOf(name.toLowerCase())) {
                 tmp.push(name);

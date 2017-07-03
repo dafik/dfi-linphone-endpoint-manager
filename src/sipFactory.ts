@@ -3,7 +3,7 @@ import Linphone = require("local-dfi-linphone/src/linphone");
 import EndpointManager = require("./endpointManager");
 import DebugLogger = require("local-dfi-debug-logger");
 
-let logger = new DebugLogger("sip:factory");
+const logger = new DebugLogger("sip:factory");
 const AST_ACTION = {
     COMMAND: "Command"
 };
@@ -22,7 +22,7 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
     }
 
     let endpointsToReturn: Map<string, IPeer>;
-    let foundEndpoints = {};
+    const foundEndpoints = {};
     let waitForEndpoint = 0;
 
     logger.debug("sending ast: sip show users");
@@ -38,11 +38,11 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
         endpointsToReturn = server.managers.peer.peers.getPeersByTech("SIP");
 
         let match;
-        let foundEndpointsTmp = [];
-        let lines = response.$content.split("\n");
+        const foundEndpointsTmp = [];
+        const lines = response.$content.split("\n");
         lines.shift();
 
-        lines.forEach(line => {
+        lines.forEach((line) => {
             match = line.split(/\s+/);
             if (asteriskContext && asteriskContext === match[2]) {
                 if (endpointsToReturn.has(match[0])) {
@@ -75,7 +75,7 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
             }
 
             function onCreateError(err2) {
-                for (let endpointName in endpointsToReturn) {
+                for (const endpointName in endpointsToReturn) {
                     if (endpointsToReturn.hasOwnProperty(endpointName)) {
                         endpointsToReturn[endpointName].removeListener(Linphone.events.ERROR, onCreateError);
                     }
@@ -84,16 +84,16 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
             }
 
             waitForEndpoint--;
-            let result = resp.$content.split("\n");
+            const result = resp.$content.split("\n");
             let name;
             result.forEach((line) => {
                 if (-1 !== line.indexOf("* Name")) {
-                    let parts = line.split(":");
+                    const parts = line.split(":");
                     name = parts[1].trim();
                 }
 
                 if (-1 !== line.indexOf("Allowed.Trsp")) {
-                    let transports = line.replace("Allowed.Trsp :", "").trim().split(",");
+                    const transports = line.replace("Allowed.Trsp :", "").trim().split(",");
                     if (-1 !== transports.indexOf(transport.toUpperCase())) {
                         endpoint = foundEndpointsTmp[name];
                         foundEndpoints[endpoint.objectName] = endpoint;
@@ -101,16 +101,16 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
                 }
             });
             if (waitForEndpoint === 0) {
-                let endpointsReturn = {};
+                const endpointsReturn = {};
                 let linphone;
                 let pjSipConf;
-                let pjSips = Object.keys(foundEndpoints);
+                const pjSips = Object.keys(foundEndpoints);
                 let waitForCreate = howMany;
 
                 for (let i = 0; i < howMany; i++) {
                     pjSipConf = foundEndpoints[pjSips[i]];
                     linphone = new Linphone({
-                        host: server.getProp("options").server.host,
+                        host: server.getProp("config").server.host,
                         password: pjSipConf.password,
                         port: manager.currentPort,
                         rtpPort: manager.currentRtpPort,

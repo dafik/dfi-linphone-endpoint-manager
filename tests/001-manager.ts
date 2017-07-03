@@ -6,6 +6,11 @@ import EndpointManger  = require("../src/endpointManager");
 let asterisk;
 let endpointManger;
 
+process.on("unhandledRejection", (reason, p) => {
+    console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
+    // application specific logging, throwing an error, or other logic here
+});
+
 describe("create one", () => {
     function onBefore(done) {
         this.timeout(0);
@@ -15,21 +20,23 @@ describe("create one", () => {
         function init() {
 
             asterisk = getServerInstance({
-                managers: {
-                    agent: false,
-                    bridge: false,
-                    channel: true,
-                    dahdi: false,
-                    device: false,
-                    peer: true,
-                    queue: false
-                },
-                server: {
-                    // host: "localhost",
-                    host: "pbx",
-                    port: "5038",
-                    secret: "node@pbx",
-                    username: "node"
+                config: {
+                    managers: {
+                        agent: false,
+                        bridge: false,
+                        channel: true,
+                        dahdi: false,
+                        device: false,
+                        peer: true,
+                        queue: false
+                    },
+                    server: {
+                        // host: "localhost",
+                        host: "pbx",
+                        port: "5038",
+                        secret: "node@pbx",
+                        username: "node"
+                    }
                 }
             });
             asterisk.start()

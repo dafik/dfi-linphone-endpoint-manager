@@ -8,8 +8,8 @@ const AST_ACTION = {
 
 export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskServer, transport: string, howMany: number, astContext, callBackFn, callbackContext) {
 
-    let endpoints = {};
-    let foundEndpoints = {};
+    const endpoints = {};
+    const foundEndpoints = {};
     let waitForEndpoint = 0;
     let waitForCreate = 0;
 
@@ -25,10 +25,10 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
                 foundEndpoints[endpoint.objectName] = endpoint;
             }
         });
-        for (let name in foundEndpoints) {
+        for (const name in foundEndpoints) {
             if (foundEndpoints.hasOwnProperty(name)) {
                 waitForEndpoint++;
-                let act = {Action: AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name};
+                const act = {Action: AST_ACTION.PJSIP_SHOW_ENDPOINT, Endpoint: name};
                 server.sendEventGeneratingAction(act, (err1, response1) => {
                     if (err1) {
                         callBackFn.call(callbackContext, err1);
@@ -36,7 +36,7 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
                     }
                     waitForEndpoint--;
 
-                    response1.events.forEach(cr => {
+                    response1.events.forEach((cr) => {
                         if (cr.Event === "AuthDetail") {
                             foundEndpoints[cr.objectName].password = cr.password;
                             if (waitForEndpoint === 0) {
@@ -51,7 +51,7 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
         function ready() {
             let linphone;
             let pjSipConf;
-            let pjSips = Object.keys(foundEndpoints);
+            const pjSips = Object.keys(foundEndpoints);
             for (let i = 0; i < howMany; i++) {
                 waitForCreate++;
                 pjSipConf = foundEndpoints[pjSips[i]];
@@ -77,7 +77,7 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
         }
 
         function onCreateError(err1) {
-            for (let endpointName in endpoints) {
+            for (const endpointName in endpoints) {
                 if (endpoints.hasOwnProperty(endpointName)) {
                     endpoints[endpointName].removeListener(Linphone.events.ERROR, onCreateError);
                 }
