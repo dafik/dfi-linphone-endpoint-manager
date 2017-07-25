@@ -1,12 +1,16 @@
 import assert = require("assert");
 import getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-import {getInstance} from "../index";
 import EndpointManger  = require("../src/endpointManager");
+import {getInstance} from "../index";
 
 let asterisk;
 let endpointManger;
 
 process.on("unhandledRejection", (reason, p) => {
+    console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
+    // application specific logging, throwing an error, or other logic here
+});
+process.on("unhandledError", (reason, p) => {
     console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
     // application specific logging, throwing an error, or other logic here
 });
@@ -79,7 +83,7 @@ describe("create one", () => {
         endpointManger.on(EndpointManger.events.ENDPOINTS_SET, onEndpoinsSet);
         endpointManger.on(EndpointManger.events.ENDPOINTS_CLEARED, onEndpoinsCleared);
 
-        endpointManger.setupEndpoints(1, "udp", "sip", "wszystkie-test");
+        endpointManger.setupEndpoints(1, "pbx", "udp", "sip", "wszystkie-test");
 
     }
 

@@ -1,7 +1,7 @@
 import assert = require("assert");
 import getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-import {getInstance} from "../index";
 import EndpointManger  = require("../src/endpointManager");
+import {getInstance} from "../index";
 
 let asterisk;
 let endpointManger;
@@ -15,21 +15,23 @@ describe("create two", () => {
         function init() {
 
             asterisk = getServerInstance({
-                managers: {
-                    agent: false,
-                    bridge: false,
-                    channel: true,
-                    dahdi: false,
-                    device: false,
-                    peer: true,
-                    queue: false
-                },
-                server: {
-                    // host: "localhost",
-                    host: "pbx",
-                    port: "5038",
-                    secret: "node@pbx",
-                    username: "node"
+                config: {
+                    managers: {
+                        agent: false,
+                        bridge: false,
+                        channel: true,
+                        dahdi: false,
+                        device: false,
+                        peer: true,
+                        queue: false
+                    },
+                    server: {
+                        // host: "localhost",
+                        host: "pbx",
+                        port: "5038",
+                        secret: "node@pbx",
+                        username: "node"
+                    }
                 }
             });
             asterisk.start()
@@ -69,7 +71,7 @@ describe("create two", () => {
         endpointManger.on(EndpointManger.events.ENDPOINTS_SET, onEndpointsSet);
         endpointManger.on(EndpointManger.events.ENDPOINTS_CLEARED, onEndpointsCleared);
 
-        endpointManger.setupEndpoints(2, "udp", "sip", "wszystkie-test");
+        endpointManger.setupEndpoints(2, "pbx", "udp", "sip", "wszystkie-test");
 
     }
 

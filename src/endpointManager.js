@@ -69,7 +69,7 @@ class EndpointManager extends events_1.EventEmitter {
         });
         this._endpoints.set(endpoint.configuration.sip, endpoint);
     }
-    setupEndpoints(howMany, transport, technology, context) {
+    setupEndpoints(howMany, host, transport, technology, context) {
         function onCreated(err, endpoints) {
             if (err) {
                 this.emit(EndpointManager.events.ERROR, err);
@@ -87,7 +87,7 @@ class EndpointManager extends events_1.EventEmitter {
                 pjsipFactory_1.createPjsipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
             }
             else if (tech === "sip") {
-                sipFactory_1.createSipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
+                sipFactory_1.createSipEndpoints(this, this._server, host, transport, howMany, context, onCreated, this);
             }
             else {
                 throw new TypeError(tech + "technology not supported yet");

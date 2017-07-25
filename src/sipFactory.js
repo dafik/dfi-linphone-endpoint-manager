@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Linphone = require("local-dfi-linphone/src/linphone");
-const DebugLogger = require("local-dfi-debug-logger");
-const logger = new DebugLogger("sip:factory");
+const local_dfi_debug_logger_1 = require("local-dfi-debug-logger");
+const logger = new local_dfi_debug_logger_1.default("sip:factory");
 const AST_ACTION = {
     COMMAND: "Command"
 };
-function createSipEndpoints(manager, server, transport, howMany, asteriskContext, callBackFn, callbackContext) {
+function createSipEndpoints(manager, server, host, transport, howMany, asteriskContext, callBackFn, callbackContext) {
     if (!server.managers.peer.enabled) {
         callBackFn.call(callbackContext, new Error("peer manager not enabled"));
         return;
@@ -85,7 +85,7 @@ function createSipEndpoints(manager, server, transport, howMany, asteriskContext
                 for (let i = 0; i < howMany; i++) {
                     pjSipConf = foundEndpoints[pjSips[i]];
                     linphone = new Linphone({
-                        host: server.getProp("config").server.host,
+                        host,
                         password: pjSipConf.password,
                         port: manager.currentPort,
                         rtpPort: manager.currentRtpPort,

@@ -36,11 +36,11 @@ class EndpointManager extends EventEmitter {
         this._server = server;
     }
 
-    public  get currentPort(): number {
+    public get currentPort(): number {
         return _currentPort();
     }
 
-    public  get  currentRtpPort(): number {
+    public get  currentRtpPort(): number {
         return _currentRtpPort();
     }
 
@@ -48,7 +48,7 @@ class EndpointManager extends EventEmitter {
         return this._endpoints;
     }
 
-    public setEndpoints(endpoints: Linphone|Linphone[]|{[key: string]: Linphone}) {
+    public setEndpoints(endpoints: Linphone | Linphone[] | { [key: string]: Linphone }) {
         if (Array.isArray(endpoints)) {
             endpoints.forEach((endpoint) => {
 
@@ -82,7 +82,7 @@ class EndpointManager extends EventEmitter {
         this._endpoints.set(endpoint.configuration.sip, endpoint);
     }
 
-    public setupEndpoints(howMany, transport, technology, context) {
+    public setupEndpoints(howMany, host, transport, technology, context) {
         function onCreated(err, endpoints) {
             if (err) {
                 this.emit(EndpointManager.events.ERROR, err);
@@ -102,7 +102,7 @@ class EndpointManager extends EventEmitter {
             if (tech === "pjsip") {
                 createPjsipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
             } else if (tech === "sip") {
-                createSipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
+                createSipEndpoints(this, this._server, host, transport, howMany, context, onCreated, this);
             } else {
                 throw new TypeError(tech + "technology not supported yet");
             }

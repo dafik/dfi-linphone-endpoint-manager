@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-const index_1 = require("../index");
 const EndpointManger = require("../src/endpointManager");
+const index_1 = require("../index");
 let asterisk;
 let endpointManger;
 describe("create two", () => {
@@ -12,21 +12,23 @@ describe("create two", () => {
         assert.doesNotThrow(init, "asterisk init failed");
         function init() {
             asterisk = getServerInstance({
-                managers: {
-                    agent: false,
-                    bridge: false,
-                    channel: true,
-                    dahdi: false,
-                    device: false,
-                    peer: true,
-                    queue: false
-                },
-                server: {
-                    // host: "localhost",
-                    host: "pbx",
-                    port: "5038",
-                    secret: "node@pbx",
-                    username: "node"
+                config: {
+                    managers: {
+                        agent: false,
+                        bridge: false,
+                        channel: true,
+                        dahdi: false,
+                        device: false,
+                        peer: true,
+                        queue: false
+                    },
+                    server: {
+                        // host: "localhost",
+                        host: "pbx",
+                        port: "5038",
+                        secret: "node@pbx",
+                        username: "node"
+                    }
                 }
             });
             asterisk.start()
@@ -59,7 +61,7 @@ describe("create two", () => {
         endpointManger.on(EndpointManger.events.ERROR, onEndpointsError);
         endpointManger.on(EndpointManger.events.ENDPOINTS_SET, onEndpointsSet);
         endpointManger.on(EndpointManger.events.ENDPOINTS_CLEARED, onEndpointsCleared);
-        endpointManger.setupEndpoints(2, "udp", "sip", "wszystkie-test");
+        endpointManger.setupEndpoints(2, "pbx", "udp", "sip", "wszystkie-test");
     }
     function onAfter(done) {
         this.timeout(1000000);
