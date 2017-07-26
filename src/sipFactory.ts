@@ -1,4 +1,3 @@
-import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 import Linphone = require("local-dfi-linphone/src/linphone");
 import EndpointManager = require("./endpointManager");
 import DebugLogger from "local-dfi-debug-logger";
@@ -8,7 +7,7 @@ const AST_ACTION = {
     COMMAND: "Command"
 };
 
-export function createSipEndpoints(manager: EndpointManager, server: AsteriskServer, host: string, transport: string, howMany: number, asteriskContext, callBackFn, callbackContext) {
+export function createSipEndpoints(manager: EndpointManager, server: IAsteriskServer, host: string, transport: string, howMany: number, asteriskContext, callBackFn, callbackContext) {
 
     interface IPeer {
         objectName: string;
@@ -44,10 +43,6 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
 
         for (let i = 0; i < howMany; i++) {
             pjSipConf = foundEndpoints.get(pjSips[i]);
-            if (!pjSipConf || !pjSipConf.password) {
-                let x = 1;
-            }
-
             linphone = new Linphone({
                 host,
                 password: pjSipConf.password,
@@ -105,8 +100,6 @@ export function createSipEndpoints(manager: EndpointManager, server: AsteriskSer
             if (found) {
                 const endpoint = foundEndpointsTmp.get(name);
                 foundEndpoints.set(endpoint.objectName, endpoint);
-            } else {
-                let c = 1;
             }
             waitForEndpoint.delete(name);
 

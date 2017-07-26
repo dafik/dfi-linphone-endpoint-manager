@@ -30,9 +30,6 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
         let waitForCreate = howMany;
         for (let i = 0; i < howMany; i++) {
             pjSipConf = foundEndpoints.get(pjSips[i]);
-            if (!pjSipConf || !pjSipConf.password) {
-                let x = 1;
-            }
             linphone = new Linphone({
                 host,
                 password: pjSipConf.password,
@@ -81,9 +78,6 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
             if (found) {
                 const endpoint = foundEndpointsTmp.get(name);
                 foundEndpoints.set(endpoint.objectName, endpoint);
-            }
-            else {
-                let c = 1;
             }
             waitForEndpoint.delete(name);
             if (waitForEndpoint.size === 0) {

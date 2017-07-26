@@ -1,12 +1,12 @@
-import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 import EndpointManager = require("./endpointManager");
 import Linphone = require("local-dfi-linphone/src/linphone");
 
 const AST_ACTION = {
-    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint"
+    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint",
+    PJSIP_SHOW_ENDPOINTS: "PJSIPShowEndpoints"
 };
 
-export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskServer, transport: string, howMany: number, astContext, callBackFn, callbackContext) {
+export function createPjsipEndpoints(manager: EndpointManager, server: IAsteriskServer, host: string, transport: string, howMany: number, astContext, callBackFn, callbackContext) {
 
     const endpoints = {};
     const foundEndpoints = {};
@@ -56,7 +56,7 @@ export function createPjsipEndpoints(manager: EndpointManager, server: AsteriskS
                 waitForCreate++;
                 pjSipConf = foundEndpoints[pjSips[i]];
                 linphone = new Linphone({
-                    host: server.getProp("options").server.host,
+                    host,
                     password: pjSipConf.password,
                     port: manager.currentPort,
                     rtpPort: manager.currentRtpPort,

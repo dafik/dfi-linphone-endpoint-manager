@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Linphone = require("local-dfi-linphone/src/linphone");
 const AST_ACTION = {
-    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint"
+    PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint",
+    PJSIP_SHOW_ENDPOINTS: "PJSIPShowEndpoints"
 };
-function createPjsipEndpoints(manager, server, transport, howMany, astContext, callBackFn, callbackContext) {
+function createPjsipEndpoints(manager, server, host, transport, howMany, astContext, callBackFn, callbackContext) {
     const endpoints = {};
     const foundEndpoints = {};
     let waitForEndpoint = 0;
@@ -48,7 +49,7 @@ function createPjsipEndpoints(manager, server, transport, howMany, astContext, c
                 waitForCreate++;
                 pjSipConf = foundEndpoints[pjSips[i]];
                 linphone = new Linphone({
-                    host: server.getProp("options").server.host,
+                    host,
                     password: pjSipConf.password,
                     port: manager.currentPort,
                     rtpPort: manager.currentRtpPort,

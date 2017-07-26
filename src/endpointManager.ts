@@ -100,7 +100,7 @@ class EndpointManager extends EventEmitter {
         this._chooseTechnology(technology, (tech) => {
             technologyChosen = tech;
             if (tech === "pjsip") {
-                createPjsipEndpoints(this, this._server, transport, howMany, context, onCreated, this);
+                createPjsipEndpoints(this, this._server, host, transport, howMany, context, onCreated, this);
             } else if (tech === "sip") {
                 createSipEndpoints(this, this._server, host, transport, howMany, context, onCreated, this);
             } else {
