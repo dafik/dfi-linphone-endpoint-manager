@@ -58,8 +58,8 @@ export function createPjsipEndpoints(manager: EndpointManager, server: IAsterisk
                 linphone = new Linphone({
                     host,
                     password: pjSipConf.password,
-                    port: manager.currentPort,
-                    rtpPort: manager.currentRtpPort,
+                    port: EndpointManager.currentPort,
+                    rtpPort: EndpointManager.currentRtpPort,
                     sip: pjSipConf.objectname,
                     technology: "PJSIP"
                 });

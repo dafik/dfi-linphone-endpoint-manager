@@ -27,10 +27,10 @@ class EndpointManager extends events_1.EventEmitter {
         this._endpoints = new Map();
         this._server = server;
     }
-    get currentPort() {
+    static get currentPort() {
         return _currentPort();
     }
-    get currentRtpPort() {
+    static get currentRtpPort() {
         return _currentRtpPort();
     }
     get endpoints() {

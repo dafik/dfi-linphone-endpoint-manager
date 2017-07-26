@@ -2,7 +2,6 @@ import {EventEmitter} from "events";
 import {createPjsipEndpoints} from "./pjsipFactory";
 import {createSipEndpoints} from "./sipFactory";
 import Linphone = require("local-dfi-linphone/src/linphone");
-import AsteriskServer = require("local-dfi-asterisk/src/asteriskServer");
 
 const _currentPort = (() => {
     let nextId = 5061;
@@ -27,20 +26,20 @@ class EndpointManager extends EventEmitter {
     }
 
     private _endpoints: Map<number, Linphone>;
-    private _server: AsteriskServer;
+    private _server: IAsteriskServer;
 
-    constructor(server: AsteriskServer) {
+    constructor(server: IAsteriskServer) {
         super();
 
         this._endpoints = new Map();
         this._server = server;
     }
 
-    public get currentPort(): number {
+    public static get currentPort(): number {
         return _currentPort();
     }
 
-    public get  currentRtpPort(): number {
+    public static get  currentRtpPort(): number {
         return _currentRtpPort();
     }
 

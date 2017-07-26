@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Linphone = require("local-dfi-linphone/src/linphone");
+const EndpointManager = require("./endpointManager");
 const local_dfi_debug_logger_1 = require("local-dfi-debug-logger");
 const logger = new local_dfi_debug_logger_1.default("sip:factory");
 const AST_ACTION = {
@@ -33,8 +34,8 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
             linphone = new Linphone({
                 host,
                 password: pjSipConf.password,
-                port: manager.currentPort,
-                rtpPort: manager.currentRtpPort,
+                port: EndpointManager.currentPort,
+                rtpPort: EndpointManager.currentRtpPort,
                 sip: pjSipConf.objectName,
                 technology: "SIP"
             });
