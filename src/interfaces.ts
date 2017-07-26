@@ -1,4 +1,4 @@
-interface IAsteriskServer {
+export interface IAsteriskServer {
 
     managers: any;
 

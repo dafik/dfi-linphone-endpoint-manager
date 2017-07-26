@@ -1,6 +1,7 @@
 import Linphone = require("local-dfi-linphone/src/linphone");
 import EndpointManager = require("./endpointManager");
 import DebugLogger from "local-dfi-debug-logger";
+import {IAsteriskServer} from "./interfaces";
 
 const logger = new DebugLogger("sip:factory");
 const AST_ACTION = {

@@ -2,6 +2,7 @@ import {EventEmitter} from "events";
 import {createPjsipEndpoints} from "./pjsipFactory";
 import {createSipEndpoints} from "./sipFactory";
 import Linphone = require("local-dfi-linphone/src/linphone");
+import {IAsteriskServer} from "./interfaces";
 
 const _currentPort = (() => {
     let nextId = 5061;
