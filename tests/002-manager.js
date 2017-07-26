@@ -8,7 +8,7 @@ let asterisk;
 let endpointManger;
 describe("create two", () => {
     function onBefore(done) {
-        this.timeout(0);
+        //this.timeout(0);
         assert.doesNotThrow(init, "asterisk init failed");
         function init() {
             asterisk = getServerInstance({
