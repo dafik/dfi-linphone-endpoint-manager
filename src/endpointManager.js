@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
+const local_dfi_linphone_1 = require("local-dfi-linphone");
 const pjsipFactory_1 = require("./pjsipFactory");
 const sipFactory_1 = require("./sipFactory");
-const Linphone = require("local-dfi-linphone/src/linphone");
 const _currentPort = (() => {
     let nextId = 5061;
     return () => {
@@ -43,7 +43,7 @@ class EndpointManager extends events_1.EventEmitter {
                 this.addEndpoint(endpoint);
             });
         }
-        else if (!(endpoints instanceof Linphone)) {
+        else if (!(endpoints instanceof local_dfi_linphone_1.default)) {
             for (const endpointName in endpoints) {
                 if (endpoints.hasOwnProperty(endpointName)) {
                     this.addEndpoint(endpoints[endpointName]);
@@ -55,10 +55,10 @@ class EndpointManager extends events_1.EventEmitter {
         }
     }
     addEndpoint(endpoint) {
-        if (!(endpoint instanceof Linphone)) {
+        if (!(endpoint instanceof local_dfi_linphone_1.default)) {
             throw new TypeError("endpoint must be Linphone prototype but found: " + typeof endpoint === "Object" ? (endpoint.constructor.name) : " ");
         }
-        endpoint.on(Linphone.events.CLOSE, () => {
+        endpoint.on(local_dfi_linphone_1.default.events.CLOSE, () => {
             if (this._endpoints.has(endpoint.configuration.sip)) {
                 this._endpoints.delete(endpoint.configuration.sip);
                 if (this._endpoints.size === 0) {
@@ -106,11 +106,11 @@ class EndpointManager extends events_1.EventEmitter {
             }
         }
         function onEachEndpoint(endpoint) {
-            endpoint.on(Linphone.events.CLOSE, onEndpointExit);
+            endpoint.on(local_dfi_linphone_1.default.events.CLOSE, onEndpointExit);
             endpoint.exit();
         }
         function onEndpointExit(endpoint) {
-            endpoint.removeListener(Linphone.events.CLOSE, onEndpointExit);
+            endpoint.removeListener(local_dfi_linphone_1.default.events.CLOSE, onEndpointExit);
             finish();
         }
         if (this._endpoints.size > 0) {
