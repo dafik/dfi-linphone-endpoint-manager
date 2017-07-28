@@ -1,6 +1,6 @@
+import Linphone from "local-dfi-linphone";
 import EndpointManager from "./endpointManager";
 import {IAsteriskServer} from "./interfaces";
-import Linphone = require("local-dfi-linphone/src/linphone");
 
 const AST_ACTION = {
     PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint",

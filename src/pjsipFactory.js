@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const local_dfi_linphone_1 = require("local-dfi-linphone");
 const endpointManager_1 = require("./endpointManager");
-const Linphone = require("local-dfi-linphone/src/linphone");
 const AST_ACTION = {
     PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint",
     PJSIP_SHOW_ENDPOINTS: "PJSIPShowEndpoints"
@@ -49,7 +49,7 @@ function createPjsipEndpoints(manager, server, host, transport, howMany, astCont
             for (let i = 0; i < howMany; i++) {
                 waitForCreate++;
                 pjSipConf = foundEndpoints[pjSips[i]];
-                linphone = new Linphone({
+                linphone = new local_dfi_linphone_1.default({
                     host,
                     password: pjSipConf.password,
                     port: endpointManager_1.default.currentPort,
@@ -57,8 +57,8 @@ function createPjsipEndpoints(manager, server, host, transport, howMany, astCont
                     sip: pjSipConf.objectname,
                     technology: "PJSIP"
                 });
-                linphone.once(Linphone.events.REGISTERED, onCreateClient.bind(this));
-                linphone.on(Linphone.events.ERROR, onCreateError.bind(this));
+                linphone.once(local_dfi_linphone_1.default.events.REGISTERED, onCreateClient.bind(this));
+                linphone.on(local_dfi_linphone_1.default.events.ERROR, onCreateError.bind(this));
                 endpoints[pjSips[i]] = linphone;
             }
         }
@@ -71,7 +71,7 @@ function createPjsipEndpoints(manager, server, host, transport, howMany, astCont
         function onCreateError(err1) {
             for (const endpointName in endpoints) {
                 if (endpoints.hasOwnProperty(endpointName)) {
-                    endpoints[endpointName].removeListener(Linphone.events.ERROR, onCreateError);
+                    endpoints[endpointName].removeListener(local_dfi_linphone_1.default.events.ERROR, onCreateError);
                 }
             }
             callBackFn.call(callbackContext, err1);
