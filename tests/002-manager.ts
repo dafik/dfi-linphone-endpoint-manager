@@ -1,7 +1,7 @@
-import assert = require("assert");
-import getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-import EndpointManger  = require("../src/endpointManager");
+import * as assert from "assert";
 import {getInstance} from "../index";
+import EndpointManger from "../src/endpointManager";
+import getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
 
 let asterisk;
 let endpointManger;

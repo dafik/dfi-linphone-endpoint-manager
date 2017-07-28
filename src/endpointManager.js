@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 const pjsipFactory_1 = require("./pjsipFactory");
 const sipFactory_1 = require("./sipFactory");
@@ -141,10 +142,11 @@ class EndpointManager extends events_1.EventEmitter {
         }
     }
 }
+exports.EndpointManager = EndpointManager;
 const EVENTS = {
     ENDPOINTS_CLEARED: Symbol("endpointsCleared"),
     ENDPOINTS_SET: Symbol("endpointsSet"),
     ERROR: Symbol("error")
 };
-module.exports = EndpointManager;
+exports.default = EndpointManager;
 //# sourceMappingURL=endpointManager.js.map

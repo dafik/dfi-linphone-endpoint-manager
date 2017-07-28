@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-const EndpointManger = require("../src/endpointManager");
 const index_1 = require("../index");
+const endpointManager_1 = require("../src/endpointManager");
+const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
 let asterisk;
 let endpointManger;
 process.on("unhandledRejection", (reason, p) => {
@@ -58,18 +58,18 @@ describe("create one", () => {
         }
         function onEndpoinsSet() {
             assert.equal(endpointManger.endpoints.size, 1);
-            endpointManger.removeListener(EndpointManger.events.ENDPOINTS_SET, onEndpoinsSet);
+            endpointManger.removeListener(endpointManager_1.default.events.ENDPOINTS_SET, onEndpoinsSet);
             endpointManger.clear();
         }
         function onEndpoinsCleared() {
-            endpointManger.removeListener(EndpointManger.events.ENDPOINTS_CLEARED, onEndpoinsCleared);
-            endpointManger.removeListener(EndpointManger.events.ERROR, onEndpoinsError);
+            endpointManger.removeListener(endpointManager_1.default.events.ENDPOINTS_CLEARED, onEndpoinsCleared);
+            endpointManger.removeListener(endpointManager_1.default.events.ERROR, onEndpoinsError);
             done();
         }
         endpointManger = index_1.getInstance(asterisk);
-        endpointManger.on(EndpointManger.events.ERROR, onEndpoinsError);
-        endpointManger.on(EndpointManger.events.ENDPOINTS_SET, onEndpoinsSet);
-        endpointManger.on(EndpointManger.events.ENDPOINTS_CLEARED, onEndpoinsCleared);
+        endpointManger.on(endpointManager_1.default.events.ERROR, onEndpoinsError);
+        endpointManger.on(endpointManager_1.default.events.ENDPOINTS_SET, onEndpoinsSet);
+        endpointManger.on(endpointManager_1.default.events.ENDPOINTS_CLEARED, onEndpoinsCleared);
         endpointManger.setupEndpoints(1, "pbx", "udp", "sip", "wszystkie-test");
     }
     function onAfter(done) {

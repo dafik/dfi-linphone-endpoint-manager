@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
-const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
-const EndpointManger = require("../src/endpointManager");
 const index_1 = require("../index");
+const endpointManager_1 = require("../src/endpointManager");
+const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
 let asterisk;
 let endpointManger;
 describe("create two", () => {
@@ -49,18 +49,18 @@ describe("create two", () => {
             throw err;
         }
         function onEndpointsSet() {
-            endpointManger.removeListener(EndpointManger.events.ENDPOINTS_SET, onEndpointsSet);
+            endpointManger.removeListener(endpointManager_1.default.events.ENDPOINTS_SET, onEndpointsSet);
             endpointManger.clear();
         }
         function onEndpointsCleared() {
-            endpointManger.removeListener(EndpointManger.events.ENDPOINTS_CLEARED, onEndpointsCleared);
-            endpointManger.removeListener(EndpointManger.events.ERROR, onEndpointsError);
+            endpointManger.removeListener(endpointManager_1.default.events.ENDPOINTS_CLEARED, onEndpointsCleared);
+            endpointManger.removeListener(endpointManager_1.default.events.ERROR, onEndpointsError);
             done();
         }
         endpointManger = index_1.getInstance(asterisk);
-        endpointManger.on(EndpointManger.events.ERROR, onEndpointsError);
-        endpointManger.on(EndpointManger.events.ENDPOINTS_SET, onEndpointsSet);
-        endpointManger.on(EndpointManger.events.ENDPOINTS_CLEARED, onEndpointsCleared);
+        endpointManger.on(endpointManager_1.default.events.ERROR, onEndpointsError);
+        endpointManger.on(endpointManager_1.default.events.ENDPOINTS_SET, onEndpointsSet);
+        endpointManger.on(endpointManager_1.default.events.ENDPOINTS_CLEARED, onEndpointsCleared);
         endpointManger.setupEndpoints(2, "pbx", "udp", "sip", "wszystkie-test");
     }
     function onAfter(done) {

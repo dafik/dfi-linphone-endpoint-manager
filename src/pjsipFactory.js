@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const EndpointManager = require("./endpointManager");
+const endpointManager_1 = require("./endpointManager");
 const Linphone = require("local-dfi-linphone/src/linphone");
 const AST_ACTION = {
     PJSIP_SHOW_ENDPOINT: "PJSIPShowEndpoint",
@@ -52,8 +52,8 @@ function createPjsipEndpoints(manager, server, host, transport, howMany, astCont
                 linphone = new Linphone({
                     host,
                     password: pjSipConf.password,
-                    port: EndpointManager.currentPort,
-                    rtpPort: EndpointManager.currentRtpPort,
+                    port: endpointManager_1.default.currentPort,
+                    rtpPort: endpointManager_1.default.currentRtpPort,
                     sip: pjSipConf.objectname,
                     technology: "PJSIP"
                 });
@@ -79,4 +79,5 @@ function createPjsipEndpoints(manager, server, host, transport, howMany, astCont
     });
 }
 exports.createPjsipEndpoints = createPjsipEndpoints;
+exports.default = createPjsipEndpoints;
 //# sourceMappingURL=pjsipFactory.js.map

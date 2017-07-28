@@ -1,8 +1,8 @@
 import {EventEmitter} from "events";
 import {createPjsipEndpoints} from "./pjsipFactory";
 import {createSipEndpoints} from "./sipFactory";
-import Linphone = require("local-dfi-linphone/src/linphone");
 import {IAsteriskServer} from "./interfaces";
+import Linphone = require("local-dfi-linphone/src/linphone");
 
 const _currentPort = (() => {
     let nextId = 5061;
@@ -17,7 +17,7 @@ const _currentRtpPort = (() => {
     };
 })();
 
-class EndpointManager extends EventEmitter {
+export class EndpointManager extends EventEmitter {
     public static get events() {
         return EVENTS;
     }
@@ -170,4 +170,4 @@ const EVENTS = {
     ERROR: Symbol("error")
 };
 
-export = EndpointManager;
+export default EndpointManager;
