@@ -1,0 +1,8 @@
+{
+  "asteriskServer": {
+    "host": "pbx",
+    "port": "5038",
+    "secret": "node@pbx",
+    "username": "node"
+  }
+}

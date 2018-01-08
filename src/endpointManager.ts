@@ -1,5 +1,5 @@
+import Linphone from "dfi-linphone";
 import {EventEmitter} from "events";
-import Linphone from "local-dfi-linphone";
 import {IAsteriskServer} from "./interfaces";
 import {createPjsipEndpoints} from "./pjsipFactory";
 import {createSipEndpoints} from "./sipFactory";

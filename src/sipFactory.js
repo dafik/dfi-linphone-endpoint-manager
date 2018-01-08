@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const local_dfi_debug_logger_1 = require("local-dfi-debug-logger");
-const local_dfi_linphone_1 = require("local-dfi-linphone");
+const dfi_debug_logger_1 = require("dfi-debug-logger");
+const dfi_linphone_1 = require("dfi-linphone");
 const endpointManager_1 = require("./endpointManager");
-const logger = new local_dfi_debug_logger_1.default("sip:factory");
+const logger = new dfi_debug_logger_1.default("sip:factory");
 const AST_ACTION = {
     COMMAND: "Command"
 };
@@ -18,7 +18,7 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
     function onCreateError(err2) {
         for (const endpointName in endpointsToReturn) {
             if (endpointsToReturn.hasOwnProperty(endpointName)) {
-                endpointsToReturn[endpointName].removeListener(local_dfi_linphone_1.default.events.ERROR, onCreateError);
+                endpointsToReturn[endpointName].removeListener(dfi_linphone_1.default.events.ERROR, onCreateError);
             }
         }
         callBackFn.call(callbackContext, err2);
@@ -31,7 +31,7 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
         let waitForCreate = howMany;
         for (let i = 0; i < howMany; i++) {
             pjSipConf = foundEndpoints.get(pjSips[i]);
-            linphone = new local_dfi_linphone_1.default({
+            linphone = new dfi_linphone_1.default({
                 host,
                 password: pjSipConf.password,
                 port: endpointManager_1.default.currentPort,
@@ -39,13 +39,13 @@ function createSipEndpoints(manager, server, host, transport, howMany, asteriskC
                 sip: pjSipConf.objectName,
                 technology: "SIP"
             });
-            linphone.once(local_dfi_linphone_1.default.events.REGISTERED, () => {
+            linphone.once(dfi_linphone_1.default.events.REGISTERED, () => {
                 waitForCreate--;
                 if (waitForCreate === 0) {
                     callBackFn.call(callbackContext, null, endpointsReturn);
                 }
             });
-            linphone.on(local_dfi_linphone_1.default.events.ERROR, onCreateError);
+            linphone.on(dfi_linphone_1.default.events.ERROR, onCreateError);
             endpointsReturn[pjSips[i]] = linphone;
         }
     }

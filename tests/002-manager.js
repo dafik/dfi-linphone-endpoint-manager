@@ -1,17 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
+const asteriskServerInstance_1 = require("dfi-asterisk/src/asteriskServerInstance");
+const fs_1 = require("fs");
 const index_1 = require("../index");
 const endpointManager_1 = require("../src/endpointManager");
-const getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
+let asteriskConfig;
 let asterisk;
 let endpointManger;
 describe("create two", () => {
     function onBefore(done) {
-        //this.timeout(0);
+        // this.timeout(0);
+        asteriskConfig = JSON.parse(fs_1.readFileSync("tests/config.json", "utf8"));
         assert.doesNotThrow(init, "asterisk init failed");
         function init() {
-            asterisk = getServerInstance({
+            asterisk = asteriskServerInstance_1.getServerInstance({
                 config: {
                     managers: {
                         agent: false,
@@ -22,13 +25,7 @@ describe("create two", () => {
                         peer: true,
                         queue: false
                     },
-                    server: {
-                        // host: "localhost",
-                        host: "pbx",
-                        port: "5038",
-                        secret: "node@pbx",
-                        username: "node"
-                    }
+                    server: asteriskConfig.asteriskServer
                 }
             });
             asterisk.start()

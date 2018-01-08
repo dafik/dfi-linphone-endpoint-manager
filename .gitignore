@@ -2,3 +2,8 @@
 node_modules
 /.idea/
 /dfi-linphone-endpoint-manager.iml
+/tests/config.json
+*.js
+**/*.js
+*.map
+**/*.map

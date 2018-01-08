@@ -1,4 +1,4 @@
-import Linphone from "local-dfi-linphone";
+import Linphone from "dfi-linphone";
 import EndpointManager from "./endpointManager";
 import {IAsteriskServer} from "./interfaces";
 

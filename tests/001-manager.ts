@@ -1,8 +1,10 @@
 import * as assert from "assert";
+import {getServerInstance} from "dfi-asterisk/src/asteriskServerInstance";
+import {readFileSync} from "fs";
 import {getInstance} from "../index";
 import EndpointManger from "../src/endpointManager";
-import getServerInstance = require("local-dfi-asterisk/src/asteriskServerInstance");
 
+let asteriskConfig;
 let asterisk;
 let endpointManger;
 
@@ -19,6 +21,8 @@ describe("create one", () => {
     function onBefore(done) {
         this.timeout(0);
 
+        asteriskConfig = JSON.parse(readFileSync("tests/config.json", "utf8"));
+
         assert.doesNotThrow(init, "asterisk init failed");
 
         function init() {
@@ -34,13 +38,7 @@ describe("create one", () => {
                         peer: true,
                         queue: false
                     },
-                    server: {
-                        // host: "localhost",
-                        host: "pbx",
-                        port: "5038",
-                        secret: "node@pbx",
-                        username: "node"
-                    }
+                    server: asteriskConfig.asteriskServer
                 }
             });
             asterisk.start()

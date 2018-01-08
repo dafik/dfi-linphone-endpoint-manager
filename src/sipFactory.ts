@@ -1,5 +1,5 @@
-import DebugLogger from "local-dfi-debug-logger";
-import Linphone from "local-dfi-linphone";
+import DebugLogger from "dfi-debug-logger";
+import Linphone from "dfi-linphone";
 import EndpointManager from "./endpointManager";
 import {IAsteriskServer} from "./interfaces";
 
